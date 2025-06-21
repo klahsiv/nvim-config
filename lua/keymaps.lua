@@ -50,5 +50,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+-- ~/.config/nvim/lua/custom/keymaps.lua
+-- vim.keymap.set('n', '<leader>mc', ':!gcc % -o %:r && ./%:r<CR> `sdl2-config --cflags --libs`', { desc = '[M]ake [C] - Compile and Run C' })
+--vim.keymap.set('n', '<leader>cs', ':!gcc % $(sdl2-config --cflags --libs) -o %:r && ./%:r<CR>', {
+--  desc = 'Compile and run C file with SDL2',
+--})
+
+vim.keymap.set('n', '<leader>cb', function()
+  -- Get current working directory name (your project folder)
+  local cwd = vim.fn.getcwd()
+  local project_name = vim.fn.fnamemodify(cwd, ':t') -- gets the tail of the path (folder name)
+
+  local cmd = string.format('!premake5.exe gmake2 && make && ./bin/Debug/%s', project_name)
+  vim.cmd(cmd)
+end, { desc = '[C]ompile and [B]uild project using Premake' })
 
 -- vim: ts=2 sts=2 sw=2 et
