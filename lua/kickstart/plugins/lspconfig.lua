@@ -22,18 +22,8 @@ return {
       { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'nvim-java/nvim-java',
 
-      {
-        'nvim-java/nvim-java',
-        dependencies = {
-          'nvim-java/lua-async-await',
-          'nvim-java/nvim-java-core',
-          'nvim-java/nvim-java-test',
-          'nvim-java/nvim-java-dap',
-          'MunifTanjim/nui.nvim',
-          'mfussenegger/nvim-dap',
-        },
-      },
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
 
@@ -271,10 +261,6 @@ return {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
         handlers = {
-          -- Custom handler for `jdtls` using `nvim-java`
-          ['jdtls'] = function()
-            require('java').setup()
-          end,
           function(server_name)
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
@@ -282,6 +268,15 @@ return {
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+          jdtls = function()
+            require('java').setup {
+              -- Your custom jdtls settings goes here
+            }
+
+            require('lspconfig').jdtls.setup {
+              -- Your custom nvim-java configuration goes here
+            }
           end,
         },
       }
